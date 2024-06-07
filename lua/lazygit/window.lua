@@ -59,13 +59,17 @@ local function open_floating_window()
   vim.cmd('set winhl=NormalFloat:LazyGitBorder')
 
   -- create a unlisted scratch buffer
-  if LAZYGIT_BUFFER == nil or vim.fn.bufwinnr(LAZYGIT_BUFFER) == -1 then
+  if LAZYGIT_BUFFER == nil then
     LAZYGIT_BUFFER = api.nvim_create_buf(false, true)
   else
     LAZYGIT_LOADED = true
   end
-  -- create file window, enter the window, and use the options defined in opts
-  local win = api.nvim_open_win(LAZYGIT_BUFFER, true, opts)
+
+  local win = vim.fn.bufwinnr(LAZYGIT_BUFFER)
+  if win == -1 then
+    -- create file window, enter the window, and use the options defined in opts
+    win = api.nvim_open_win(LAZYGIT_BUFFER, true, opts)
+  end
 
   vim.bo[LAZYGIT_BUFFER].filetype = 'lazygit'
 
